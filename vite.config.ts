@@ -1,3 +1,4 @@
+import { codecovVitePlugin } from '@codecov/vite-plugin'
 import { reactRouter } from '@react-router/dev/vite'
 import {
 	type SentryReactRouterBuildOptions,
@@ -52,6 +53,11 @@ export default defineConfig((config) => ({
 		MODE === 'production' && process.env.SENTRY_AUTH_TOKEN
 			? sentryReactRouter(sentryConfig, config)
 			: null,
+		codecovVitePlugin({
+			enableBundleAnalysis: true,
+			bundleName: 'michalkolacz',
+			uploadToken: process.env.CODECOV_TOKEN,
+		}),
 	],
 	test: {
 		include: ['./app/**/*.test.{ts,tsx}'],
