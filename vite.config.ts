@@ -55,7 +55,7 @@ export default defineConfig((config) => ({
 			: null,
 		codecovVitePlugin({
 			enableBundleAnalysis: true,
-			bundleName: 'michalkolacz.com',
+			bundleName: 'michalkolacz',
 			uploadToken: process.env.CODECOV_TOKEN,
 		}),
 	],
