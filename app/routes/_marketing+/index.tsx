@@ -74,11 +74,13 @@ export function Description() {
 			className={`transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
 		>
 			<h1 className="mb-2 text-2xl font-medium text-gray-900 dark:text-white">
-				Jane Doe
+				Michal Kolacz
 			</h1>
 			<p className="text-gray-600 dark:text-gray-300">
-				Software engineer focused on web development, AI projects, and building
-				thoughtful digital experiences.
+				Software engineer who wants to share his knowledge and opinions about
+				web development. I have experience in creating products using React,
+				Typescript and Node.js. Also I am a big fan of Remix (currently React
+				Router v7).
 			</p>
 		</div>
 	)
