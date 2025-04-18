@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import meSrc from '#app/assets/me.avif?url'
 import { cn } from '#app/utils/misc.tsx'
 import { type Route } from './+types/index.ts'
+import { Icon } from '#app/components/ui/icon.tsx'
 
 export const meta: Route.MetaFunction = () => [{ title: 'Epic Notes' }]
 
@@ -37,7 +38,7 @@ export function SocialLinks() {
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
 				aria-label="Twitter"
 			>
-				<Twitter size={24} />
+				<Icon size="lg" name="twitter-logo" />
 			</a>
 			<a
 				href="https://github.com"
@@ -46,7 +47,7 @@ export function SocialLinks() {
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
 				aria-label="GitHub"
 			>
-				<Github size={24} />
+				<Icon size="lg" name="github-logo" />
 			</a>
 			<a
 				href="https://linkedin.com"
@@ -55,7 +56,7 @@ export function SocialLinks() {
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
 				aria-label="LinkedIn"
 			>
-				<Linkedin size={24} />
+				<Icon size="lg" name="linkedin-logo" />
 			</a>
 		</div>
 	)
