@@ -219,9 +219,7 @@ function App() {
 					</nav>
 				</header>
 
-				<div className="flex flex-1 flex-col">
-					<Outlet />
-				</div>
+				<Outlet />
 
 				<div className="container flex justify-between pb-5">
 					<Logo />
