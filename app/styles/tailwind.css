@@ -150,6 +150,9 @@
 	--animate-fade-in-left: fade-in-left 0.4s ease-out forwards;
 	--animate-fade-in-right: fade-in-right 0.4s ease-out forwards;
 
+	--font-heading: 'Roboto Condensed Variable', sans-serif;
+	--font-body: 'Roboto', sans-serif;
+
 	@keyframes roll-reveal {
 		from {
 			transform: rotate(12deg) scale(0);
@@ -240,5 +243,18 @@
 	::backdrop,
 	::file-selector-button {
 		border-color: hsl(var(--border));
+	}
+
+	body {
+		font-family: var(--font-body);
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-heading);
 	}
 }
