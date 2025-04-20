@@ -1,9 +1,7 @@
-import { Github, Linkedin, Twitter } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import meSrc from '#app/assets/me.avif?url'
-import { cn } from '#app/utils/misc.tsx'
-import { type Route } from './+types/index.ts'
 import { Icon } from '#app/components/ui/icon.tsx'
+import { type Route } from './+types/index.ts'
 
 export const meta: Route.MetaFunction = () => [{ title: 'Epic Notes' }]
 
