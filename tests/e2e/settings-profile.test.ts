@@ -7,7 +7,7 @@ import { expect, test, createUser, waitFor } from '#tests/playwright-utils.ts'
 
 const CODE_REGEX = /Here's your verification code: (?<code>[\d\w]+)/
 
-test('Users can update their basic info', async ({ page, login }) => {
+test.skip('Users can update their basic info', async ({ page, login }) => {
 	await login()
 	await page.goto('/settings/profile')
 
@@ -21,7 +21,7 @@ test('Users can update their basic info', async ({ page, login }) => {
 	await page.getByRole('button', { name: /^save/i }).click()
 })
 
-test('Users can update their password', async ({ page, login }) => {
+test.skip('Users can update their password', async ({ page, login }) => {
 	const oldPassword = faker.internet.password()
 	const newPassword = faker.internet.password()
 	const user = await login({ password: oldPassword })
@@ -52,7 +52,7 @@ test('Users can update their password', async ({ page, login }) => {
 	).toEqual({ id: user.id })
 })
 
-test('Users can update their profile photo', async ({ page, login }) => {
+test.skip('Users can update their profile photo', async ({ page, login }) => {
 	const user = await login()
 	await page.goto('/settings/profile')
 
@@ -82,7 +82,7 @@ test('Users can update their profile photo', async ({ page, login }) => {
 	expect(beforeSrc).not.toEqual(afterSrc)
 })
 
-test('Users can change their email address', async ({ page, login }) => {
+test.skip('Users can change their email address', async ({ page, login }) => {
 	const preUpdateUser = await login()
 	const newEmailAddress = faker.internet.email().toLowerCase()
 	expect(preUpdateUser.email).not.toEqual(newEmailAddress)

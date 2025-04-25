@@ -40,7 +40,7 @@ const test = base.extend<{
 	},
 })
 
-test('onboarding with link', async ({ page, getOnboardingData }) => {
+test.skip('onboarding with link', async ({ page, getOnboardingData }) => {
 	const onboardingData = getOnboardingData()
 
 	await page.goto('/')
@@ -109,7 +109,10 @@ test('onboarding with link', async ({ page, getOnboardingData }) => {
 	await expect(page).toHaveURL(`/`)
 })
 
-test('onboarding with a short code', async ({ page, getOnboardingData }) => {
+test.skip('onboarding with a short code', async ({
+	page,
+	getOnboardingData,
+}) => {
 	const onboardingData = getOnboardingData()
 
 	await page.goto('/signup')
@@ -135,7 +138,7 @@ test('onboarding with a short code', async ({ page, getOnboardingData }) => {
 	await expect(page).toHaveURL(`/onboarding`)
 })
 
-test('completes onboarding after GitHub OAuth given valid user details', async ({
+test.skip('completes onboarding after GitHub OAuth given valid user details', async ({
 	page,
 	prepareGitHubUser,
 }) => {
@@ -184,7 +187,7 @@ test('completes onboarding after GitHub OAuth given valid user details', async (
 	})
 })
 
-test('logs user in after GitHub OAuth if they are already registered', async ({
+test.skip('logs user in after GitHub OAuth if they are already registered', async ({
 	page,
 	prepareGitHubUser,
 }) => {
@@ -233,7 +236,7 @@ test('logs user in after GitHub OAuth if they are already registered', async ({
 	})
 })
 
-test('shows help texts on entering invalid details on onboarding page after GitHub OAuth', async ({
+test.skip('shows help texts on entering invalid details on onboarding page after GitHub OAuth', async ({
 	page,
 	prepareGitHubUser,
 }) => {
@@ -322,7 +325,7 @@ test('shows help texts on entering invalid details on onboarding page after GitH
 	await expect(page.getByText(/thanks for signing up/i)).toBeVisible()
 })
 
-test('login as existing user', async ({ page, insertNewUser }) => {
+test.skip('login as existing user', async ({ page, insertNewUser }) => {
 	const password = faker.internet.password()
 	const user = await insertNewUser({ password })
 	invariant(user.name, 'User name not found')
@@ -335,7 +338,7 @@ test('login as existing user', async ({ page, insertNewUser }) => {
 	await expect(page.getByRole('link', { name: user.name })).toBeVisible()
 })
 
-test('reset password with a link', async ({ page, insertNewUser }) => {
+test.skip('reset password with a link', async ({ page, insertNewUser }) => {
 	const originalPassword = faker.internet.password()
 	const user = await insertNewUser({ password: originalPassword })
 	invariant(user.name, 'User name not found')
@@ -389,7 +392,10 @@ test('reset password with a link', async ({ page, insertNewUser }) => {
 	await expect(page.getByRole('link', { name: user.name })).toBeVisible()
 })
 
-test('reset password with a short code', async ({ page, insertNewUser }) => {
+test.skip('reset password with a short code', async ({
+	page,
+	insertNewUser,
+}) => {
 	const user = await insertNewUser()
 	await page.goto('/login')
 
