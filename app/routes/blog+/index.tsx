@@ -1,4 +1,10 @@
-import { Link } from 'react-router'
+import {
+	data,
+	Link,
+	type LoaderFunctionArgs,
+	useLoaderData,
+} from 'react-router'
+import { getBlogMdxListItems } from '#app/utils/mdx.server.ts'
 
 const blogPosts = [
 	{
@@ -39,14 +45,23 @@ const blogPosts = [
 	},
 ]
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+	const posts = blogPosts
+	const myBlogPosts = await getBlogMdxListItems({ request })
+
+	return data({ posts })
+}
+
 export default function BlogIndex() {
+	const { posts } = useLoaderData<typeof loader>()
+
 	return (
 		<main className="container mx-auto flex-1 py-12">
 			<div className="mx-auto max-w-3xl">
 				<h1 className="font-roboto mb-8 text-3xl font-bold">Blog</h1>
 
 				<ul className="space-y-6">
-					{blogPosts.map((post) => (
+					{posts.map((post) => (
 						<li key={post.id}>
 							<Link to={`/blog/${post.slug}`} className="group block">
 								<div className="flex flex-col space-y-1">
