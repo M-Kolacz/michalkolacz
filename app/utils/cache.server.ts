@@ -15,7 +15,10 @@ import { remember } from '@epic-web/remember'
 import { LRUCache } from 'lru-cache'
 import { DatabaseSync } from 'node:sqlite'
 import { z } from 'zod'
-import { cachifiedTimingReporter, type Timings } from './timing.server.ts'
+import { cachifiedTimingReporter, time, type Timings } from './timing.server.ts'
+import {} from './session.server.ts'
+import { getUserId } from './auth.server.ts'
+import { prisma } from './db.server.ts'
 
 const CACHE_DATABASE_PATH = process.env.CACHE_DATABASE_PATH
 
@@ -162,17 +165,65 @@ export async function searchCacheKeys(search: string, limit: number) {
 	}
 }
 
+export const shouldForceFresh = async ({
+	forceFresh,
+	request,
+	key,
+}: {
+	forceFresh?: boolean | string
+	request?: Request
+	key: string
+}) => {
+	if (typeof forceFresh === 'boolean') return forceFresh
+	if (typeof forceFresh === 'string') return forceFresh.split(',').includes(key)
+
+	if (!request) return false
+	const fresh = new URL(request.url).searchParams.get('fresh')
+	if (typeof fresh !== 'string') return false
+
+	const userId = await getUserId(request)
+	const user = await prisma.user.findUnique({
+		where: { id: userId || undefined },
+		select: { roles: { select: { name: true } } },
+	})
+	if (user?.roles.find((role) => role.name !== 'ADMIN')) return false
+	if (fresh === '') return true
+
+	return fresh.split(',').includes(key)
+}
+
 export async function cachified<Value>(
 	{
 		timings,
+		request,
 		...options
 	}: CachifiedOptions<Value> & {
+		request?: Request
 		timings?: Timings
+		forceFresh?: boolean | string
 	},
 	reporter: CreateReporter<Value> = verboseReporter<Value>(),
 ): Promise<Value> {
+	let cachifiedResolved = false
 	return baseCachified(
-		options,
+		{
+			...options,
+			forceFresh: await shouldForceFresh({
+				forceFresh: options.forceFresh,
+				request,
+				key: options.key,
+			}),
+			getFreshValue: async (context) => {
+				if (!cachifiedResolved && timings) {
+					return time(() => options.getFreshValue(context), {
+						timings,
+						type: `getFreshValue:${options.key}`,
+						desc: `request forced to wait for fresh ${options.key} value`,
+					})
+				}
+				return options.getFreshValue(context)
+			},
+		},
 		mergeReporters(cachifiedTimingReporter(timings), reporter),
 	)
 }

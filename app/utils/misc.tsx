@@ -290,3 +290,9 @@ export async function downloadFile(url: string, retries: number = 0) {
 		return downloadFile(url, retries + 1)
 	}
 }
+
+export function typedBoolean<T>(
+	value: T,
+): value is Exclude<T, '' | 0 | false | null | undefined> {
+	return Boolean(value)
+}
