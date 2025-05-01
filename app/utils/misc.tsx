@@ -1,4 +1,9 @@
 import { clsx, type ClassValue } from 'clsx'
+import {
+	format as dateFormat,
+	add as dateAdd,
+	parseISO as dateParseISO,
+} from 'date-fns'
 import { type GetSrcArgs, defaultGetSrc } from 'openimg/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFormAction, useNavigation } from 'react-router'
@@ -289,4 +294,23 @@ export async function downloadFile(url: string, retries: number = 0) {
 		if (retries > MAX_RETRIES) throw e
 		return downloadFile(url, retries + 1)
 	}
+}
+
+export function typedBoolean<T>(
+	value: T,
+): value is Exclude<T, '' | 0 | false | null | undefined> {
+	return Boolean(value)
+}
+
+export const formatDate = (dateString: string | Date, format = 'PPP') => {
+	if (typeof dateString !== 'string') {
+		dateString = dateString.toISOString()
+	}
+	return dateFormat(parseDate(dateString), format)
+}
+
+const parseDate = (dateString: string) => {
+	return dateAdd(dateParseISO(dateString), {
+		minutes: new Date().getTimezoneOffset(),
+	})
 }

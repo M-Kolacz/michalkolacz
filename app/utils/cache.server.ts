@@ -1,6 +1,5 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { DatabaseSync } from 'node:sqlite'
 import {
 	cachified as baseCachified,
 	verboseReporter,
@@ -14,8 +13,12 @@ import {
 } from '@epic-web/cachified'
 import { remember } from '@epic-web/remember'
 import { LRUCache } from 'lru-cache'
+import { DatabaseSync } from 'node:sqlite'
 import { z } from 'zod'
-import { cachifiedTimingReporter, type Timings } from './timing.server.ts'
+import { cachifiedTimingReporter, time, type Timings } from './timing.server.ts'
+import {} from './session.server.ts'
+import { getUserId } from './auth.server.ts'
+import { prisma } from './db.server.ts'
 
 const CACHE_DATABASE_PATH = process.env.CACHE_DATABASE_PATH
 
@@ -118,6 +121,7 @@ const getAllKeysStatement = cacheDb.prepare('SELECT key FROM cache LIMIT ?')
 const searchKeysStatement = cacheDb.prepare(
 	'SELECT key FROM cache WHERE key LIKE ? LIMIT ?',
 )
+const deleteAllStatement = cacheDb.prepare('DELETE FROM cache')
 
 export const cache: CachifiedCache = {
 	name: 'SQLite cache',
@@ -132,6 +136,7 @@ export const cache: CachifiedCache = {
 		})
 		if (!parsedEntry.success) return null
 		const { metadata, value } = parsedEntry.data
+
 		if (!value) return null
 		return { metadata, value }
 	},
@@ -153,6 +158,10 @@ export async function getAllCacheKeys(limit: number) {
 	}
 }
 
+export const deleteAllCache = async () => {
+	await deleteAllStatement.run()
+}
+
 export async function searchCacheKeys(search: string, limit: number) {
 	return {
 		sqlite: searchKeysStatement
@@ -162,17 +171,67 @@ export async function searchCacheKeys(search: string, limit: number) {
 	}
 }
 
+export const shouldForceFresh = async ({
+	forceFresh,
+	request,
+	key,
+}: {
+	forceFresh?: boolean | string
+	request?: Request
+	key: string
+}) => {
+	if (process.env.CACHE_FORCE_FRESH === 'true') return true
+
+	if (typeof forceFresh === 'boolean') return forceFresh
+	if (typeof forceFresh === 'string') return forceFresh.split(',').includes(key)
+
+	if (!request) return false
+	const fresh = new URL(request.url).searchParams.get('fresh')
+	if (typeof fresh !== 'string') return false
+
+	const userId = await getUserId(request)
+	const user = await prisma.user.findUnique({
+		where: { id: userId || undefined },
+		select: { roles: { select: { name: true } } },
+	})
+	if (user?.roles.find((role) => role.name !== 'ADMIN')) return false
+	if (fresh === '') return true
+
+	return fresh.split(',').includes(key)
+}
+
 export async function cachified<Value>(
 	{
 		timings,
+		request,
 		...options
 	}: CachifiedOptions<Value> & {
+		request?: Request
 		timings?: Timings
+		forceFresh?: boolean | string
 	},
 	reporter: CreateReporter<Value> = verboseReporter<Value>(),
 ): Promise<Value> {
+	let cachifiedResolved = false
 	return baseCachified(
-		options,
+		{
+			...options,
+			forceFresh: await shouldForceFresh({
+				forceFresh: options.forceFresh,
+				request,
+				key: options.key,
+			}),
+			getFreshValue: async (context) => {
+				if (!cachifiedResolved && timings) {
+					return time(() => options.getFreshValue(context), {
+						timings,
+						type: `getFreshValue:${options.key}`,
+						desc: `request forced to wait for fresh ${options.key} value`,
+					})
+				}
+				return options.getFreshValue(context)
+			},
+		},
 		mergeReporters(cachifiedTimingReporter(timings), reporter),
 	)
 }
