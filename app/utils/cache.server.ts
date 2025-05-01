@@ -121,6 +121,7 @@ const getAllKeysStatement = cacheDb.prepare('SELECT key FROM cache LIMIT ?')
 const searchKeysStatement = cacheDb.prepare(
 	'SELECT key FROM cache WHERE key LIKE ? LIMIT ?',
 )
+const deleteAllStatement = cacheDb.prepare('DELETE FROM cache')
 
 export const cache: CachifiedCache = {
 	name: 'SQLite cache',
@@ -135,6 +136,7 @@ export const cache: CachifiedCache = {
 		})
 		if (!parsedEntry.success) return null
 		const { metadata, value } = parsedEntry.data
+
 		if (!value) return null
 		return { metadata, value }
 	},
@@ -154,6 +156,10 @@ export async function getAllCacheKeys(limit: number) {
 			.map((row) => (row as { key: string }).key),
 		lru: [...lru.keys()],
 	}
+}
+
+export const deleteAllCache = async () => {
+	await deleteAllStatement.run()
 }
 
 export async function searchCacheKeys(search: string, limit: number) {

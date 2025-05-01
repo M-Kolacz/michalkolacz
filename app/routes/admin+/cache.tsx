@@ -14,6 +14,7 @@ import { Spacer } from '#app/components/spacer.tsx'
 import { Button } from '#app/components/ui/button.tsx'
 import {
 	cache,
+	deleteAllCache,
 	getAllCacheKeys,
 	lruCache,
 	searchCacheKeys,
@@ -76,6 +77,10 @@ export async function action({ request }: Route.ActionArgs) {
 		}
 		case 'lru': {
 			lruCache.delete(key)
+			break
+		}
+		case 'allSqlite': {
+			await deleteAllCache()
 			break
 		}
 		default: {
@@ -180,6 +185,11 @@ export default function CacheAdminRoute({ loaderData }: Route.ComponentProps) {
 			<Spacer size="3xs" />
 			<div className="flex flex-col gap-4">
 				<h2 className="text-h2">SQLite Cache:</h2>
+				<CacheKeyRow
+					cacheKey="Delete all cache"
+					type="allSqlite"
+					instance={instance}
+				/>
 				{loaderData.cacheKeys.sqlite.map((key) => (
 					<CacheKeyRow
 						key={key}
@@ -200,7 +210,7 @@ function CacheKeyRow({
 }: {
 	cacheKey: string
 	instance?: string
-	type: 'sqlite' | 'lru'
+	type: 'sqlite' | 'lru' | 'allSqlite'
 }) {
 	const fetcher = useFetcher<typeof action>()
 	const dc = useDoubleCheck()
