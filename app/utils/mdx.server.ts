@@ -147,7 +147,7 @@ export const getMdxDirList = async (
 						.replace(/\.mdx$/, ''),
 				}))
 				.filter(({ name }) => name !== 'README.md')
-
+			console.log({ dirList })
 			return dirList
 		},
 	})
@@ -175,4 +175,51 @@ export const getBlogMdxListItems = async (options: CachifiedOptions) => {
 			return pages.map(({ code, ...rest }) => rest)
 		},
 	})
+}
+
+export const getMdxPage = async (
+	{
+		contentDir,
+		slug,
+	}: {
+		contentDir: string
+		slug: string
+	},
+	options: CachifiedOptions,
+) => {
+	const { forceFresh, ttl = defaultTTL, request, timings } = options
+	const key = `mdx-page:${contentDir}:${slug}:compiled`
+	const page = await cachified({
+		key,
+		cache,
+		request,
+		timings,
+		ttl,
+		staleWhileRevalidate: defaultStaleWhileRevalidate,
+		forceFresh,
+		checkValue: checkCompiledValue,
+		getFreshValue: async () => {
+			const pageFiles = await downloadMdxFilesCached(contentDir, slug, options)
+			const compiledPage = await compileMdxCached({
+				contentDir,
+				slug,
+				...pageFiles,
+				options,
+			}).catch((error) => {
+				console.error('Failed to get a fresh value for mdx:', {
+					contentDir,
+					slug,
+				})
+				return Promise.reject(error)
+			})
+
+			return compiledPage
+		},
+	})
+
+	if (!page) {
+		void cache.delete(key)
+	}
+
+	return page
 }
