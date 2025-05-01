@@ -174,6 +174,8 @@ export const shouldForceFresh = async ({
 	request?: Request
 	key: string
 }) => {
+	if (process.env.CACHE_FORCE_FRESH === 'true') return true
+
 	if (typeof forceFresh === 'boolean') return forceFresh
 	if (typeof forceFresh === 'string') return forceFresh.split(',').includes(key)
 
