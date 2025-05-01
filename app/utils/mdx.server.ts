@@ -2,7 +2,7 @@ import { type GithubFile, type MdxPage } from '../types'
 import { cachified, cache } from './cache.server'
 import { compileMdx } from './compile-mdx.server'
 import { downloadDirList, downloadMdxFileOrDirectory } from './github.server'
-import { typedBoolean } from './misc'
+import { formatDate, typedBoolean } from './misc'
 import { type Timings } from './timing.server'
 
 type CachifiedOptions = {
@@ -43,6 +43,9 @@ const compileMdxCached = async ({
 
 			if (compiledPage) {
 				return {
+					dateDisplay: compiledPage.frontmatter.date
+						? formatDate(compiledPage.frontmatter.date)
+						: undefined,
 					...compiledPage,
 					slug,
 				}

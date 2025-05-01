@@ -7,7 +7,9 @@ import {
 import { getBlogMdxListItems } from '#app/utils/mdx.server.ts'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-	const posts = await getBlogMdxListItems({ request })
+	const posts = await getBlogMdxListItems({
+		request,
+	})
 
 	return data({ posts })
 }
@@ -29,7 +31,7 @@ export default function BlogIndex() {
 										{post.frontmatter.title}
 									</h2>
 									<p className="text-muted-foreground text-sm">
-										{post.frontmatter.date}
+										{post.dateDisplay}
 									</p>
 								</div>
 							</Link>
