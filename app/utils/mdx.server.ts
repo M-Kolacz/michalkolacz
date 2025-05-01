@@ -147,7 +147,7 @@ export const getMdxDirList = async (
 						.replace(/\.mdx$/, ''),
 				}))
 				.filter(({ name }) => name !== 'README.md')
-			console.log({ dirList })
+
 			return dirList
 		},
 	})
