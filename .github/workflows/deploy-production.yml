@@ -16,6 +16,9 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-22.04
+    environment:
+      name: Production
+      url: https://michalkolacz.com
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4

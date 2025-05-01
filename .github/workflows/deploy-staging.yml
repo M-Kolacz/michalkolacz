@@ -150,6 +150,9 @@ jobs:
     needs: [lint, typecheck, vitest, playwright]
     # only build/deploy branches on pushes
     if: ${{ github.event_name == 'push' }}
+    environment:
+      name: Staging
+      url: https://michalkolacz-cdd9-staging.fly.dev
 
     steps:
       - name: ⬇️ Checkout repo
