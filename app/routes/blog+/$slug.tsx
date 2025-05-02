@@ -1,4 +1,5 @@
 import { data, type HeadersFunction, Link } from 'react-router'
+import { posthogClient } from '#app/utils/feature-flags.server'
 import { pipeHeaders } from '#app/utils/headers.server.ts'
 import { getMdxPage } from '#app/utils/mdx.server.ts'
 import { useMDXComponent } from '#app/utils/mdx.tsx'
@@ -25,9 +26,16 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
 		throw data('Page not found', { status: 404, headers })
 	}
 
+	const isEnabled =
+		(await posthogClient.isFeatureEnabled(
+			'first-feature-flag',
+			'distinct-id',
+		)) || false
+
 	return data(
 		{
 			page,
+			isEnabled,
 		},
 		{ headers },
 	)
@@ -36,7 +44,9 @@ export const loader = async ({ params, request }: Route.LoaderArgs) => {
 export const headers: HeadersFunction = pipeHeaders
 
 export default function BlogPost({ loaderData }: Route.ComponentProps) {
-	const { page } = loaderData
+	const { page, isEnabled } = loaderData
+
+	console.log({ isEnabled })
 
 	const Component = useMDXComponent(page.code)
 

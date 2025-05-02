@@ -102,6 +102,7 @@
     "openimg": "^0.7.0",
     "p-queue": "^8.1.0",
     "posthog-js": "^1.239.0",
+    "posthog-node": "^4.16.0",
     "prisma": "^6.5.0",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
