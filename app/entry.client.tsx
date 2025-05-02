@@ -10,7 +10,8 @@ if (ENV.MODE === 'production' && ENV.SENTRY_DSN) {
 const PosthogInit = () => {
 	useEffect(() => {
 		posthog.init('phc_F1WbwxCyp5a6a8PKfe9caNENHcOaRnDWyXCCYeRkFDT', {
-			api_host: 'https://eu.i.posthog.com',
+			api_host: '/ingest',
+			ui_host: 'https://eu.posthog.com',
 			person_profiles: 'always',
 			// or 'always' to create profiles for anonymous users as well
 		})
