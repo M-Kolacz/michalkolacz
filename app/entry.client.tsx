@@ -25,7 +25,7 @@ startTransition(() => {
 		document,
 		<StrictMode>
 			<HydratedRouter />
-			<PosthogInit />
+			{process.env.NODE_ENV === 'production' && <PosthogInit />}
 		</StrictMode>,
 	)
 })
