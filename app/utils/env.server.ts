@@ -10,8 +10,8 @@ const schema = z.object({
 	CACHE_DATABASE_PATH: z.string(),
 	CACHE_FORCE_FRESH: z.enum(['true', 'false']).default('false'),
 	// If you plan on using Sentry, remove the .optional()
-	SENTRY_DSN: z.string(),
-	POSTHOG_API_KEY: z.string(),
+	SENTRY_DSN: z.string().optional(),
+	POSTHOG_API_KEY: z.string().optional(),
 	// If you plan to use Resend, remove the .optional()
 	RESEND_API_KEY: z.string().optional(),
 	// If you plan to use GitHub auth, remove the .optional()
