@@ -1,0 +1,26 @@
+#blog-post {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		margin-top: 2rem; /* Space above headings */
+		margin-bottom: 1rem; /* Space below headings */
+	}
+
+	/* Paragraphs */
+	p {
+		margin-top: 0; /* No space above paragraphs */
+		margin-bottom: 1.5rem; /* Space below paragraphs */
+		line-height: 1.6; /* Improved readability */
+	}
+
+	/* Optional: Adjust spacing for lists */
+	ul,
+	ol {
+		margin-top: 0;
+		margin-bottom: 1.5rem;
+		padding-left: 1.5rem; /* Indent list items */
+	}
+}
