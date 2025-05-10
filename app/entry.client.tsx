@@ -6,7 +6,7 @@ import { HydratedRouter } from 'react-router/dom'
 if (ENV.MODE === 'production' && ENV.SENTRY_DSN) {
 	void import('./utils/monitoring.client.tsx').then(({ init }) => init())
 }
-
+// TODO: Use posthog the same way as Sentry
 const PosthogInit = () => {
 	useEffect(() => {
 		posthog.init(ENV.POSTHOG_API_KEY, {
