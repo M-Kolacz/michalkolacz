@@ -22,8 +22,9 @@ const posthogProxy = async (request: Request) => {
 		method: request.method,
 		headers,
 		body: request.body,
+		// @ts-ignore: The `duplex` property is not yet part of the standard `fetch` API.
 		duplex: 'half',
-	} as RequestInit)
+	})
 
 	return new Response(response.body, {
 		status: response.status,
