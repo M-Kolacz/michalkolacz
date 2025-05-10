@@ -54,9 +54,9 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 				>
 					← Back to all posts
 				</Link>
-				<div id="blog-post">
+				<article id="blog-post">
 					<Component />
-				</div>
+				</article>
 			</div>
 		</main>
 	)
