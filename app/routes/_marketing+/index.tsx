@@ -30,7 +30,7 @@ export function SocialLinks() {
 	return (
 		<div className="flex space-x-4">
 			<a
-				href="https://twitter.com"
+				href="https://x.com/M_Kolacz"
 				target="_blank"
 				rel="noopener noreferrer"
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
@@ -39,7 +39,7 @@ export function SocialLinks() {
 				<Icon size="lg" name="twitter-logo" />
 			</a>
 			<a
-				href="https://github.com"
+				href="https://github.com/M-Kolacz"
 				target="_blank"
 				rel="noopener noreferrer"
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
@@ -48,7 +48,7 @@ export function SocialLinks() {
 				<Icon size="lg" name="github-logo" />
 			</a>
 			<a
-				href="https://linkedin.com"
+				href="https://www.linkedin.com/in/m-kolacz"
 				target="_blank"
 				rel="noopener noreferrer"
 				className="text-gray-600 transition-all hover:scale-105 hover:text-[oklch(42.4%_0.199_265.638)] dark:text-gray-400 dark:hover:text-[oklch(42.4%_0.199_265.638)]"
