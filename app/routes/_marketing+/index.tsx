@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import meSrc from '#app/assets/me.avif?url'
 import { Icon } from '#app/components/ui/icon.tsx'
 import { type Route } from './+types/index.ts'
+import { Button } from '#app/components/ui/button.tsx'
+import { Link } from 'react-router'
 
 export const meta: Route.MetaFunction = () => [{ title: 'Epic Notes' }]
 
@@ -72,13 +74,12 @@ export function Description() {
 			className={`transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
 		>
 			<h1 className="mb-2 text-2xl font-medium text-gray-900 dark:text-white">
-				Michal Kolacz
+				Hi 👋 I'm Michal Kolacz.
 			</h1>
 			<p className="text-gray-600 dark:text-gray-300">
-				Software engineer who wants to share his knowledge and opinions about
-				web development. I have experience in creating products using React,
-				Typescript and Node.js. Also I am a big fan of Remix (currently React
-				Router v7).
+				Web developer from Krakow, Poland. I work at{' '}
+				<a href="https://www.schibsted.pl/">Schibsted Tech Polska</a> as a
+				Software Enginner.
 			</p>
 		</div>
 	)
@@ -100,8 +101,11 @@ export default function Index() {
 					{/* Description Section */}
 					<div className="animate-fade-in-right w-full p-8 md:w-3/5">
 						<Description />
-						<div className="mt-6">
+						<div className="mt-6 flex items-center justify-between">
 							<SocialLinks />
+							<Button asChild variant={'default'}>
+								<Link to={'/blog'}>Check my blog</Link>
+							</Button>
 						</div>
 					</div>
 				</div>
