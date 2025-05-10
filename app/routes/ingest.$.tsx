@@ -22,9 +22,8 @@ const posthogProxy = async (request: Request) => {
 		method: request.method,
 		headers,
 		body: request.body,
-		// @ts-ignore
 		duplex: 'half',
-	})
+	} as RequestInit)
 
 	return new Response(response.body, {
 		status: response.status,
