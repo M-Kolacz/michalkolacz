@@ -1,9 +1,14 @@
 import { data, type HeadersFunction, Link } from 'react-router'
+import blogPostStyleSheetUrl from '#app/styles/blog-post.css?url'
 import { pipeHeaders } from '#app/utils/headers.server.ts'
 import { getMdxPage } from '#app/utils/mdx.server.ts'
 import { useMDXComponent } from '#app/utils/mdx.tsx'
 import { getServerTimeHeader, makeTimings } from '#app/utils/timing.server.ts'
 import { type Route } from './+types/$slug'
+
+export const links: Route.LinksFunction = () => {
+	return [{ rel: 'stylesheet', href: blogPostStyleSheetUrl }].filter(Boolean)
+}
 
 export const loader = async ({ params, request }: Route.LoaderArgs) => {
 	const timings = makeTimings('blog post loader')
@@ -49,8 +54,9 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
 				>
 					← Back to all posts
 				</Link>
-
-				<Component />
+				<div id="blog-post">
+					<Component />
+				</div>
 			</div>
 		</main>
 	)
