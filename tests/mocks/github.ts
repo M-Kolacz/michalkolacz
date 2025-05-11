@@ -1,4 +1,5 @@
-import path from 'node:path'
+import fs from 'node:fs/promises'
+import nodePath from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { faker } from '@faker-js/faker'
 import fsExtra from 'fs-extra'
@@ -7,10 +8,26 @@ import { USERNAME_MAX_LENGTH } from '#app/utils/user-validation.ts'
 
 const { json } = HttpResponse
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const here = (...s: Array<string>) => path.join(__dirname, ...s)
+const isDirectory = async (path: string) => {
+	try {
+		return (await fs.lstat(path)).isDirectory()
+	} catch {
+		return false
+	}
+}
 
-const githubUserFixturePath = path.join(
+const isFile = async (path: string) => {
+	try {
+		return (await fs.lstat(path)).isFile()
+	} catch {
+		return false
+	}
+}
+
+const __dirname = nodePath.dirname(fileURLToPath(import.meta.url))
+const here = (...s: Array<string>) => nodePath.join(__dirname, ...s)
+
+const githubUserFixturePath = nodePath.join(
 	here(
 		'..',
 		'fixtures',
@@ -19,7 +36,7 @@ const githubUserFixturePath = path.join(
 	),
 )
 
-await fsExtra.ensureDir(path.dirname(githubUserFixturePath))
+await fsExtra.ensureDir(nodePath.dirname(githubUserFixturePath))
 
 function createGitHubUser(code?: string | null) {
 	const createEmail = () => ({
@@ -191,4 +208,91 @@ export const handlers: Array<HttpHandler> = [
 			headers: { 'content-type': 'image/jpg' },
 		})
 	}),
+
+	http.get<{ path: string; owner: string; repo: string }>(
+		'https://api.github.com/repos/:owner/:repo/contents/:path',
+		async ({ params, request }) => {
+			const url = new URL(request.url)
+			const { owner, repo } = params
+
+			const path = decodeURIComponent(params.path).trim()
+
+			const isMockable =
+				owner === 'M-Kolacz' &&
+				repo === 'michalkolacz' &&
+				path.startsWith('content')
+
+			if (!isMockable) {
+				throw new Error(`Mocking not supported for ${owner}/${repo} ${path}`)
+			}
+
+			const localPath = nodePath.join(process.cwd(), path)
+			const isLocalDir = await isDirectory(localPath)
+			const isLocalFile = await isFile(localPath)
+
+			if (!isLocalDir && !isLocalFile) {
+				throw new Error(`File or directory not found: ${localPath}`)
+			}
+
+			if (isLocalFile) {
+				const encoding = 'base64' as const
+				const content = await fs.readFile(localPath, { encoding: 'utf-8' })
+				return json({
+					content: Buffer.from(content, 'utf-8').toString(encoding),
+					encoding,
+				})
+			}
+
+			const dirList = await fs.readdir(localPath, { encoding: 'utf-8' })
+
+			const files = await Promise.all(
+				dirList.map(async (name) => {
+					const relativePath = nodePath.join(path, name)
+					const sha = relativePath
+					const fullPath = nodePath.join(localPath, name)
+					const isDir = await isDirectory(fullPath)
+					const size = isDir ? 0 : (await fs.stat(fullPath)).size
+
+					return {
+						name,
+						path: relativePath,
+						sha,
+						size,
+						url: `https://api.github.com/repos/${owner}/${repo}/contents/${relativePath}?${url.searchParams}`,
+						html_url: `https://github.com/${owner}/${repo}/tree/master/${relativePath}`,
+						git_url: `https://api.github.com/repos/${owner}/${repo}/git/trees/${sha}`,
+						download_url: null,
+						type: isDir ? 'dir' : 'file',
+						_links: {
+							self: `https://api.github.com/repos/${owner}/${repo}/contents/${path}${url.searchParams}`,
+							git: `https://api.github.com/repos/${owner}/${repo}/git/trees/${sha}`,
+							html: `https://github.com/${owner}/${repo}/tree/main/${path}`,
+						},
+					}
+				}),
+			)
+
+			return json(files)
+		},
+	),
+
+	http.get<{ owner: string; repo: string; sha: string }>(
+		'https://api.github.com/repos/:owner/:repo/git/blobs/:sha',
+		async ({ params }) => {
+			const { owner, repo, sha: localPath } = params
+			const fullPath = nodePath.join(process.cwd(), localPath)
+
+			const encoding = 'base64' as const
+			const file = await fs.readFile(fullPath, { encoding: 'utf-8' })
+
+			return json({
+				sha: localPath,
+				node_id: `${localPath}_node_id`,
+				size: (await fs.stat(fullPath)).size,
+				url: `https://api.github.com/repos/${owner}/${repo}/git/blobs/${localPath}`,
+				content: Buffer.from(file, 'utf-8').toString(encoding),
+				encoding,
+			})
+		},
+	),
 ]
