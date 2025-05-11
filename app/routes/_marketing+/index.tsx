@@ -79,7 +79,7 @@ export function Description() {
 			<p className="text-gray-600 dark:text-gray-300">
 				Web developer from Krakow, Poland. I work at{' '}
 				<a href="https://www.schibsted.pl/">Schibsted Tech Polska</a> as a
-				Software Enginner.
+				Software Engineer.
 			</p>
 		</div>
 	)
