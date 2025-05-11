@@ -20,7 +20,7 @@ export default function BlogIndex() {
 	return (
 		<main className="container mx-auto flex-1 py-12">
 			<div className="mx-auto max-w-3xl">
-				<h1 className="font-roboto mb-8 text-3xl font-bold">Blog</h1>
+				<h1 className="font-roboto mb-8 text-3xl font-bold">Blog posts</h1>
 
 				<ul className="space-y-6">
 					{posts.map((post) => (

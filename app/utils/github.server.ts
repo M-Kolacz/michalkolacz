@@ -11,7 +11,6 @@ const safePath = (s: string) => s.replace(/\\/g, '/')
 const Octokit = createOctokit.plugin(throttling)
 
 const octokit = new Octokit({
-	// TODO: add github token to .env file
 	auth: process.env.BOT_GITHUB_TOKEN,
 	throttle: {
 		onRateLimit: (retryAfter, options) => {
