@@ -1,8 +1,8 @@
 import { bundleMDX } from 'mdx-bundler'
 import PQueue from 'p-queue'
-import remarkAutolinkHeadings from 'remark-autolink-headings'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
-import remarkSlug from 'remark-slug'
 import type * as U from 'unified'
 import { type GithubFile } from '#app/types'
 
@@ -51,19 +51,16 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 	})
 
 	try {
-		const { frontmatter, code } = await bundleMDX({
+		const { code, frontmatter } = await bundleMDX({
 			source: indexFile.content,
 			files,
 
 			mdxOptions(options) {
-				options.remarkPlugins = [
-					...(options.remarkPlugins ?? []),
-					remarkSlug,
-					[remarkAutolinkHeadings, { behavior: 'wrap' }],
-					gfm,
-				]
+				options.remarkPlugins = [...(options.remarkPlugins ?? []), gfm]
 				options.rehypePlugins = [
 					...(options.rehypePlugins ?? []),
+					rehypeSlug,
+					[rehypeAutolinkHeadings, { behavior: 'wrap' }],
 					...rehypePlugins,
 				]
 				return options
