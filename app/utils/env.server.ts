@@ -19,6 +19,7 @@ const schema = z.object({
 	GITHUB_CLIENT_SECRET: z.string().optional(),
 	GITHUB_REDIRECT_URI: z.string().optional(),
 	GITHUB_TOKEN: z.string().optional(),
+	GITHUB_WEBHOOK_SECRET: z.string(),
 
 	ALLOW_INDEXING: z.enum(['true', 'false']).optional(),
 
