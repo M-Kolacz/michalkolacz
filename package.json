@@ -129,6 +129,7 @@
     "@codecov/vite-plugin": "^1.9.0",
     "@epic-web/config": "^1.18.1",
     "@faker-js/faker": "^9.6.0",
+    "@octokit/webhooks-types": "^7.6.1",
     "@playwright/test": "^1.51.1",
     "@react-router/dev": "^7.4.0",
     "@sly-cli/sly": "^1.14.0",
