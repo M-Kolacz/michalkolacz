@@ -1,3 +1,4 @@
+import { createHmac, timingSafeEqual } from 'crypto'
 import nodePath from 'path'
 import { throttling } from '@octokit/plugin-throttling'
 import { Octokit as createOctokit } from '@octokit/rest'
@@ -133,4 +134,24 @@ export const downloadDirList = async (path: string) => {
 	}
 
 	return data
+}
+
+export const verifySignature = (
+	request: Request,
+	rawBody: Buffer<ArrayBuffer>,
+) => {
+	const signature = request.headers.get('x-hub-signature-256') ?? ''
+
+	const secret = process.env.GITHUB_WEBHOOK_SECRET
+
+	const expectedSignature = `sha256=${createHmac('sha256', secret).update(rawBody).digest('hex')}`
+
+	const signatureBuffer = Buffer.from(signature, 'utf8')
+	const expectedSignatureBuffer = Buffer.from(expectedSignature, 'utf8')
+
+	if (
+		signatureBuffer.length !== expectedSignatureBuffer.length ||
+		!timingSafeEqual(signatureBuffer, expectedSignatureBuffer)
+	)
+		throw new Response('Invalid signature', { status: 401 })
 }
