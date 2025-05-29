@@ -42,7 +42,7 @@ export async function action({ request }: Route.ActionArgs) {
 		cachePromises.push(getBlogMdxListItems({ request, forceFresh: true }))
 
 	await Promise.all(cachePromises).catch(() => {
-		throw new Response('Error occured while refreshing cache', { status: 500 })
+		throw new Response('Error occurred while refreshing cache', { status: 500 })
 	})
 
 	return data({ invalidatedKeys: keysToInvalidate })
