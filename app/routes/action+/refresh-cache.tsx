@@ -1,39 +1,20 @@
-import { createHmac, timingSafeEqual } from 'crypto'
 import { type PushEvent } from '@octokit/webhooks-types'
 import { data } from 'react-router'
+import { verifySignature } from '#app/utils/github.server.ts'
 import { getBlogMdxListItems, getMdxPage } from '#app/utils/mdx.server.ts'
+import { parseRawBody } from '#app/utils/misc.tsx'
 import { type Route } from '../+types/me'
 
 export async function action({ request }: Route.ActionArgs) {
 	const arrayBuffer = await request.arrayBuffer()
 	const rawBody = Buffer.from(arrayBuffer)
 
-	const signature = request.headers.get('x-hub-signature-256') ?? ''
+	verifySignature(request, rawBody)
 
-	const secret = process.env.GITHUB_WEBHOOK_SECRET
+	const body = parseRawBody<PushEvent>(rawBody)
 
-	const expectedSignature = `sha256=${createHmac('sha256', secret).update(rawBody).digest('hex')}`
-
-	const signatureBuffer = Buffer.from(signature, 'utf8')
-	const expectedSignatureBuffer = Buffer.from(expectedSignature, 'utf8')
-
-	if (
-		signatureBuffer.length !== expectedSignatureBuffer.length ||
-		!timingSafeEqual(signatureBuffer, expectedSignatureBuffer)
-	)
-		throw new Response('Invalid signature', { status: 401 })
-
-	let body: PushEvent
-	try {
-		body = JSON.parse(rawBody.toString()) as PushEvent
-	} catch (error) {
-		console.error('Error parsing JSON:', error)
-		throw new Response('Invalid JSON', { status: 400 })
-	}
-
-	const isMaster = body.ref === 'refs/heads/master'
-
-	if (!isMaster) throw data('Webhook not from master branch', { status: 400 })
+	if (body.ref !== 'refs/heads/master')
+		throw data('Webhook not from master branch', { status: 400 })
 
 	const changedFiles = new Set<string>()
 
@@ -49,11 +30,20 @@ export async function action({ request }: Route.ActionArgs) {
 		(file) => file.split('/')[2] as string,
 	)
 
+	const cachePromises: Array<Promise<unknown>> = []
+
 	for (const slug of keysToInvalidate) {
-		await getMdxPage({ contentDir: 'blog', slug }, { forceFresh: true })
+		cachePromises.push(
+			getMdxPage({ contentDir: 'blog', slug }, { forceFresh: true }),
+		)
 	}
 
-	await getBlogMdxListItems({ request, forceFresh: true })
+	if (keysToInvalidate.length !== 0)
+		cachePromises.push(getBlogMdxListItems({ request, forceFresh: true }))
 
-	return data({ filteredFiles, keysToInvalidate })
+	await Promise.all(cachePromises).catch(() => {
+		throw new Response('Error occured while refreshing cache', { status: 500 })
+	})
+
+	return data({ invalidatedKeys: keysToInvalidate })
 }

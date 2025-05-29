@@ -314,3 +314,15 @@ const parseDate = (dateString: string) => {
 		minutes: new Date().getTimezoneOffset(),
 	})
 }
+
+export const parseRawBody = <T,>(rawBody: Buffer<ArrayBuffer>): T => {
+	let body
+	try {
+		body = JSON.parse(rawBody.toString()) as T
+	} catch (error) {
+		console.error('Error parsing JSON:', error)
+		throw new Response('Invalid JSON', { status: 400 })
+	}
+
+	return body
+}
