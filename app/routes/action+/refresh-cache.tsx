@@ -3,7 +3,7 @@ import { data } from 'react-router'
 import { verifySignature } from '#app/utils/github.server.ts'
 import { getBlogMdxListItems, getMdxPage } from '#app/utils/mdx.server.ts'
 import { parseRawBody } from '#app/utils/misc.tsx'
-import { type Route } from '../+types/me'
+import { type Route } from './+types/refresh-cache.tsx'
 
 export async function action({ request }: Route.ActionArgs) {
 	const arrayBuffer = await request.arrayBuffer()
