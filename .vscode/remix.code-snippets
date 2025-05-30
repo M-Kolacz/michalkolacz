@@ -77,4 +77,11 @@
 			"}",
 		],
 	},
+	"import": {
+		"prefix": "/import",
+		"scope": "typescriptreact,javascriptreact,typescript,javascript",
+		"body": [
+			"import { $2 } from '$1'",
+		],
+	},
 }
