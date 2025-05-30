@@ -77,7 +77,7 @@
 			"}",
 		],
 	},
-	"import ": {
+	"import": {
 		"prefix": "/import",
 		"scope": "typescriptreact,javascriptreact,typescript,javascript",
 		"body": [
