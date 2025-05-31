@@ -24,7 +24,6 @@ export default function CodeBlock({ children, ...preProps }) {
 		props: { children: codeChildren, ...restProps },
 	} = children
 
-	console.log({ children, restProps })
 	return (
 		<div className={`group relative ${preProps.className}`}>
 			{/* Copy button: absolutely positioned in the top-right */}
