@@ -1,6 +1,7 @@
 import { bundleMDX } from 'mdx-bundler'
 import PQueue from 'p-queue'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
 import type * as U from 'unified'
@@ -61,6 +62,7 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 					...(options.rehypePlugins ?? []),
 					rehypeSlug,
 					[rehypeAutolinkHeadings, { behavior: 'wrap' }],
+					[rehypePrettyCode, { theme: 'night-owl' }],
 					...rehypePlugins,
 				]
 				return options
