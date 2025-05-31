@@ -62,7 +62,17 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 					...(options.rehypePlugins ?? []),
 					rehypeSlug,
 					[rehypeAutolinkHeadings, { behavior: 'wrap' }],
-					[rehypePrettyCode, { theme: 'night-owl' }],
+					[
+						rehypePrettyCode,
+						{
+							theme: 'night-owl',
+							onVisitLine: (node: any) => {
+								if (node.children.length === 0) {
+									node.children = [{ type: 'text', value: ' ' }]
+								}
+							},
+						},
+					],
 					...rehypePlugins,
 				]
 				return options

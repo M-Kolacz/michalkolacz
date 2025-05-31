@@ -10,23 +10,19 @@ At the beginning of my journey as a Software Developer, I was always looking for
 
 ## Delegation props
 
-```tsx
+```tsx showLineNumbers
 <Button {...props} />
 ```
 
 ## Respect native conventions
 
-```tsx
+```tsx showLineNumbers
 <Button text="Hello there" />
-```
-
-```tsx
-<Button>Hello there</Button>
 ```
 
 ## Compound components
 
-```tsx
+```tsx showLineNumbers
 <Input>
 	<Input.Label>Username</Input.Label>
 	<Input.Field />
@@ -36,7 +32,7 @@ At the beginning of my journey as a Software Developer, I was always looking for
 
 ## Object index access
 
-```tsx
+```tsx showLineNumbers
 const variants = {
 	primary: 'Hi!',
 	secondary: 'Hello!',
@@ -49,7 +45,7 @@ Different props depends on the variant.
 
 ## React contexts
 
-```tsx
+```tsx showLineNumbers
 const ThemeContext = React.createContext('light')
 
 const useThemeContext = () => {
