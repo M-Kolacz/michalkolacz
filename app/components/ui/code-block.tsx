@@ -1,8 +1,14 @@
 import { cloneElement, useRef, useState } from 'react'
 
-export default function CodeBlock({ children, ...preProps }) {
+export default function CodeBlock({
+	children,
+	...preProps
+}: {
+	children: any
+	className?: string
+}) {
 	// This ref will point to the actual <code> DOM node
-	const codeRef = useRef(null)
+	const codeRef = useRef<HTMLPreElement>(null)
 	const [copied, setCopied] = useState(false)
 
 	const handleCopy = async () => {
