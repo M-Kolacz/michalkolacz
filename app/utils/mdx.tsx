@@ -1,8 +1,11 @@
 import { LRUCache } from 'lru-cache'
 import * as mdxBundler from 'mdx-bundler/client/index.js'
 import { useMemo } from 'react'
+import CodeBlock from '#app/components/ui/code-block.tsx'
 
-const mdxComponents = {}
+const mdxComponents = {
+	pre: CodeBlock,
+}
 
 const getMdxComponent = (code: string) => {
 	const Component = mdxBundler.getMDXComponent(code)
