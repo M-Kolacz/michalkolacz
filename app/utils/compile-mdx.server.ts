@@ -50,6 +50,7 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 		keyName: 'path',
 		valueName: 'content',
 	})
+	rehypePrettyCode({})
 
 	try {
 		const { code, frontmatter } = await bundleMDX({
@@ -65,7 +66,7 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 					[
 						rehypePrettyCode,
 						{
-							theme: 'night-owl',
+							theme: { dark: 'night-owl', light: 'github-light' },
 							onVisitLine: (node: any) => {
 								if (node.children.length === 0) {
 									node.children = [{ type: 'text', value: ' ' }]

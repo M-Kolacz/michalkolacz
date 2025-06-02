@@ -27,7 +27,7 @@ export default function CodeBlock({
 	}
 
 	const {
-		props: { children: codeChildren, ...restProps },
+		props: { children: codeChildren },
 	} = children
 
 	return (
