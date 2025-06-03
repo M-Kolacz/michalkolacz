@@ -72,6 +72,20 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 									node.children = [{ type: 'text', value: ' ' }]
 								}
 							},
+							keepBackground: true,
+							filterMetaString: (string: string) => string,
+							showLineNumbers: true,
+							// Optional: start from a specific number
+							lineNumberStart: 1,
+
+							// Custom CSS for the <code> tag highlighting
+							onVisitHighlightedLine: (node: any) => {
+								node.properties.className = ['highlighted']
+							},
+							// Custom CSS for the line numbers
+							onVisitHighlightedWord: (node: any) => {
+								node.properties.className = ['word-highlighted']
+							},
 						},
 					],
 					...rehypePlugins,

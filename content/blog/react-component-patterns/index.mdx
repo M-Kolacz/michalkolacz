@@ -32,7 +32,7 @@ At the beginning of my journey as a Software Developer, I was always looking for
 
 ## Object index access
 
-```tsx showLineNumbers
+```tsx {1-3,4} showLineNumbers
 const variants = {
 	primary: 'Hi!',
 	secondary: 'Hello!',
@@ -56,4 +56,21 @@ const useThemeContext = () => {
 	}
 	return context
 }
+```
+
+## Another example
+
+```js {1-4} caption="Caption" title="elo" showLineNumbers
+// This line is highlighted
+console.log('Hello')
+// These lines are highlighted
+const x = 1
+const y = 2
+```
+
+## Another test
+
+```js /age/#v /name/#v /setAge/#s /setName/#s /50/#i /"Taylor"/#i
+const [age, setAge] = useState(50)
+const [name, setName] = useState('Taylor')
 ```

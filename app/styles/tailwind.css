@@ -359,4 +359,20 @@
 		color: var(--shiki-dark);
 		background-color: var(--shiki-dark-bg);
 	}
+
+	.highlighted.highlighted.highlighted {
+		background-color: rgba(200, 200, 255, 0.1);
+		border-left: 2px solid #60a5fa;
+	}
+
+	.highlighted.highlighted.highlighted > span {
+		background-color: #15283d;
+	}
+
+	/* Word highlighting */
+	.word-highlighted.word-highlighted.word-highlighted.word-highlighted {
+		background-color: rgba(255, 255, 0, 0.1);
+		padding: 2px;
+		border-radius: 4px;
+	}
 }
