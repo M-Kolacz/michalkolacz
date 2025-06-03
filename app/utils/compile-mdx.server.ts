@@ -1,6 +1,7 @@
 import { bundleMDX } from 'mdx-bundler'
 import PQueue from 'p-queue'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
 import type * as U from 'unified'
@@ -49,6 +50,7 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 		keyName: 'path',
 		valueName: 'content',
 	})
+	rehypePrettyCode({})
 
 	try {
 		const { code, frontmatter } = await bundleMDX({
@@ -61,6 +63,31 @@ const compileMdx = async <FrontmatterType extends Record<string, unknown>>(
 					...(options.rehypePlugins ?? []),
 					rehypeSlug,
 					[rehypeAutolinkHeadings, { behavior: 'wrap' }],
+					[
+						rehypePrettyCode,
+						{
+							theme: { dark: 'night-owl', light: 'github-light' },
+							onVisitLine: (node: any) => {
+								if (node.children.length === 0) {
+									node.children = [{ type: 'text', value: ' ' }]
+								}
+							},
+							keepBackground: true,
+							filterMetaString: (string: string) => string,
+							showLineNumbers: true,
+							// Optional: start from a specific number
+							lineNumberStart: 1,
+
+							// Custom CSS for the <code> tag highlighting
+							onVisitHighlightedLine: (node: any) => {
+								node.properties.className = ['highlighted']
+							},
+							// Custom CSS for the line numbers
+							onVisitHighlightedWord: (node: any) => {
+								node.properties.className = ['word-highlighted']
+							},
+						},
+					],
 					...rehypePlugins,
 				]
 				return options

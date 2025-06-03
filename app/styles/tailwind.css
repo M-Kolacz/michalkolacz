@@ -284,4 +284,95 @@
 	h6 {
 		font-family: var(--font-heading);
 	}
+
+	/* 1) Reset the counter whenever a new code block has data-line-numbers */
+	code[data-line-numbers] {
+		counter-reset: line;
+	}
+
+	/* 2) Before each <span data-line>, increment and display the counter */
+	code[data-line-numbers] > [data-line]::before {
+		counter-increment: line;
+		content: counter(line);
+		display: inline-block;
+		width: 1.5rem; /* adjust if you need 2 or 3 digits */
+		margin-right: 0.75rem; /* spacing between number and code text */
+		text-align: right;
+		color: #888;
+		user-select: none; /* prevents selecting just the numbers */
+	}
+
+	/* 3) If your code block has many lines, adjust the gutter width: */
+	code[data-line-numbers][data-line-numbers-max-digits='2']
+		> [data-line]::before {
+		width: 2.25rem;
+	}
+	code[data-line-numbers][data-line-numbers-max-digits='3']
+		> [data-line]::before {
+		width: 2.75rem;
+	}
+
+	/* 4) Give the code text a bit of padding on the left so it doesn’t run into the numbers: */
+	code[data-line-numbers] {
+		font-family: 'Fira Code', Menlo, Consolas, monospace;
+		padding-left: 0.5rem;
+	}
+
+	.code-wrapper {
+		position: relative;
+	}
+
+	/* The copy button: */
+	.code-wrapper button.copy-button {
+		position: absolute;
+		top: 0.5rem; /* adjust for your padding */
+		right: 0.5rem;
+		background: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		font-size: 0.75rem;
+		border: none;
+		border-radius: 0.25rem;
+		padding: 0.25rem 0.5rem;
+		opacity: 0; /* hidden by default */
+		transition: opacity 0.2s;
+		cursor: pointer;
+	}
+
+	/* When the user hovers the wrapper, show the button: */
+	.code-wrapper:hover button.copy-button {
+		opacity: 1;
+	}
+
+	/* Optional hover state for the button: */
+	.code-wrapper button.copy-button:hover {
+		background: rgba(0, 0, 0, 0.8);
+	}
+
+	code[data-theme*=' '],
+	code[data-theme*=' '] span {
+		color: var(--shiki-light);
+		background-color: var(--shiki-light-bg);
+	}
+
+	html.dark code[data-theme*=' '],
+	html.dark code[data-theme*=' '] span {
+		color: var(--shiki-dark);
+		background-color: var(--shiki-dark-bg);
+	}
+
+	.highlighted.highlighted.highlighted {
+		background-color: rgba(200, 200, 255, 0.1);
+		border-left: 2px solid #60a5fa;
+	}
+
+	.highlighted.highlighted.highlighted > span {
+		background-color: #15283d;
+	}
+
+	/* Word highlighting */
+	.word-highlighted.word-highlighted.word-highlighted.word-highlighted {
+		background-color: rgba(255, 255, 0, 0.1);
+		padding: 2px;
+		border-radius: 4px;
+	}
 }

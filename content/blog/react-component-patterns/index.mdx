@@ -1,0 +1,76 @@
+---
+title: React component patterns
+date: 2025-05-31
+description: My thoughts about a good React component patterns that can be applied everywhere.
+---
+
+# The holy grail of React component patterns
+
+At the beginning of my journey as a Software Developer, I was always looking for the best patterns for everything. I guess my obsession with the best patterns started due to low level of confidence of my skills. Now, after years of experience I am aware of that there is no holy grail in terms of patterns, but I have some good ways of writing a code that I would like to share with you.
+
+## Delegation props
+
+```tsx showLineNumbers
+<Button {...props} />
+```
+
+## Respect native conventions
+
+```tsx showLineNumbers
+<Button text="Hello there" />
+```
+
+## Compound components
+
+```tsx showLineNumbers
+<Input>
+	<Input.Label>Username</Input.Label>
+	<Input.Field />
+	<Input.Error>Invalid username</Input.Error>
+</Input>
+```
+
+## Object index access
+
+```tsx {1-3,4} showLineNumbers
+const variants = {
+	primary: 'Hi!',
+	secondary: 'Hello!',
+}
+
+<Button variant={variant}>{variants[variant]}</Button>
+```
+
+Different props depends on the variant.
+
+## React contexts
+
+```tsx showLineNumbers
+const ThemeContext = React.createContext('light')
+
+const useThemeContext = () => {
+	const context = useContext(ThemeContext)
+
+	if (!context) {
+		throw new Error('useThemeContext must be used within a ThemeProvider')
+	}
+	return context
+}
+```
+
+## Another example
+
+```js {1-4} caption="Caption" title="elo" showLineNumbers
+// This line is highlighted
+console.log('Hello')
+// These lines are highlighted
+const x = 1
+const y = 2
+```
+
+## Another test
+
+```js /age/#v /name/#v /setAge/#s /setName/#s /50/#i /"Taylor"/#i
+const [age, setAge] = useState(50)
+const [name, setName] = useState('Taylor')
+```
