@@ -16,6 +16,10 @@
 		line-height: 1.6; /* Improved readability */
 	}
 
+	figure {
+		margin-bottom: 1.5rem;
+	}
+
 	/* Optional: Adjust spacing for lists */
 	ul,
 	ol {
