@@ -360,17 +360,35 @@
 		background-color: var(--shiki-dark-bg);
 	}
 
+	/* Line highlighting for GitHub Lite */
 	.highlighted.highlighted.highlighted {
+		background-color: #f1f8ff; /* very light blue background */
+		border-left: 2px solid #2188ff; /* GitHub blue accent */
+	}
+
+	.highlighted.highlighted.highlighted > span {
+		background-color: #f1f8ff; /* match the default code-block background */
+	}
+
+	/* Word highlighting for GitHub Lite */
+	.word-highlighted.word-highlighted.word-highlighted.word-highlighted {
+		background-color: rgba(255, 223, 93, 0.4); /* soft yellow tint */
+		padding: 2px;
+		border-radius: 4px;
+	}
+
+	html.dark .highlighted.highlighted.highlighted {
 		background-color: rgba(200, 200, 255, 0.1);
 		border-left: 2px solid #60a5fa;
 	}
 
-	.highlighted.highlighted.highlighted > span {
+	html.dark .highlighted.highlighted.highlighted > span {
 		background-color: #15283d;
 	}
 
 	/* Word highlighting */
-	.word-highlighted.word-highlighted.word-highlighted.word-highlighted {
+	html.dark
+		.word-highlighted.word-highlighted.word-highlighted.word-highlighted {
 		background-color: rgba(255, 255, 0, 0.1);
 		padding: 2px;
 		border-radius: 4px;

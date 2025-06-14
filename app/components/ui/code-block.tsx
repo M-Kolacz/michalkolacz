@@ -46,7 +46,7 @@ export default function CodeBlock({
 				{isValidElement(children)
 					? cloneElement(children as ReactElement<any>, {
 							ref: codeRef,
-							className: 'py-6',
+							className: 'py-6 pr-9 overflow-x-auto',
 						})
 					: children}
 			</pre>
