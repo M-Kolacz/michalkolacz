@@ -51,23 +51,16 @@ Of course first we need to create a context using `createContext` and then we ne
 
 ```tsx showLineNumbers {8,10-18,27,29}#a
 // UserContext.tsx
-import {
-	createContext,
-	useContext,
-} from 'react'
+import { createContext, useContext } from 'react'
 
 type User = { id: string }
 
-const UserContext =
-	createContext<null | User>(null)
+const UserContext = createContext<null | User>(null)
 
-export const UserProvider =
-	UserContext.Provider
+export const UserProvider = UserContext.Provider
 
 export const useUserContext = () => {
-	const context = useContext(
-		UserContext,
-	)
+	const context = useContext(UserContext)
 
 	if (context === null) {
 		throw new Error(
