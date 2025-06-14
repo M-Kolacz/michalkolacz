@@ -27,4 +27,6 @@ node_modules
 /app/components/ui/icons
 .react-router/
 
-/playground/
+/playground/*
+# Except the config file
+!/playground/.prettierrc.cjs

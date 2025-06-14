@@ -15,22 +15,30 @@ Lets see how we can use React context:
 
 ```tsx showLineNumbers
 // UserContext.tsx
-import { createContext, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 
 type User = { id: string }
 
 export const UserContext = createContext<null | User>(null)
 
 // App.tsx
-import { UserContext } from './UserContext.ts
+import { UserContext } from './UserContext.ts'
 
-export const App = ({ children }: { children: ReactNode }) => {
-	return <UserContext.Provider value={{ id: '123' }}>{children}</UserContext.Provider>
+export const App = ({
+	children,
+}: {
+	children: ReactNode
+}) => {
+	return (
+		<UserContext.Provider value={{ id: '123' }}>
+			{children}
+		</UserContext.Provider>
+	)
 }
 
 // UserCard.tsx
 import { useContext } from 'react'
-import { UserContext } from './UserContext.ts
+import { UserContext } from './UserContext.ts'
 
 export const UserCard = () => {
 	const user = useContext(UserContext)
@@ -43,27 +51,44 @@ Of course first we need to create a context using `createContext` and then we ne
 
 ```tsx showLineNumbers {8,10-18,27,29}#a
 // UserContext.tsx
-import { createContext, useContext } from 'react'
+import {
+	createContext,
+	useContext,
+} from 'react'
 
 type User = { id: string }
 
-const UserContext = createContext<null | User>(null)
+const UserContext =
+	createContext<null | User>(null)
 
-export const UserProvider = UserContext.Provider
+export const UserProvider =
+	UserContext.Provider
 
 export const useUserContext = () => {
-	const context = useContext(UserContext)
+	const context = useContext(
+		UserContext,
+	)
 
 	if (context === null) {
-		throw new Error('useUserContext must be used within a UserProvider')
+		throw new Error(
+			'useUserContext must be used within a UserProvider',
+		)
 	}
 
 	return context
 }
 
 // App.tsx
-export const App = ({ children }: { children: ReactNode }) => {
-	return <UserProvider value={{ id: '123' }}>{children}</UserProvider>
+export const App = ({
+	children,
+}: {
+	children: ReactNode
+}) => {
+	return (
+		<UserProvider value={{ id: '123' }}>
+			{children}
+		</UserProvider>
+	)
 }
 
 // UserCard.tsx
@@ -74,6 +99,7 @@ export const UserCard = () => {
 
 	return <div>{user.id}</div>
 }
+
 ```
 
 Instead of exposing the context directly, we can create two helpers: a provider and a hook. The provider is just a simple wrapper around the context provider, but the hook logic is interesting. In this hook, we are checking if the context exists and if it doesn`t it means that we are out of the scope of the provider and we throws the error.
